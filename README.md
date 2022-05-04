@@ -3,6 +3,8 @@
 ## Submission for 🚩 **Challenge 3: Minimum Viable Exchange**
 Available on https://bigred-swap.surge.sh.
 
+Contracts deployed on [Rinkeby](https://rinkeby.etherscan.io/address/0xab0baf912feade9B2df142073682d67BE6f787c8) at [0xab0baf912feade9B2df142073682d67BE6f787c8](https://rinkeby.etherscan.io/address/0xab0baf912feade9B2df142073682d67BE6f787c8).
+
 ![BigRed Swap screenshot!](/images/screenshot.png)
 
 See [🏗 scaffold-eth](https://github.com/scaffold-eth/scaffold-eth) for complete instructions.
