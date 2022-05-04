@@ -26,7 +26,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
 //
-const defaultNetwork = "localhost";
+const defaultNetwork = "rinkeby";
 
 const mainnetGwei = 21;
 
@@ -73,10 +73,10 @@ module.exports = {
       */
     },
 
-    // rinkeby: {
-    //   url: `https://rinkeby.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
-    //   accounts: [`${process.env.RINKEBY_DEPLOYER_PRIV_KEY}`],
-    // },
+    rinkeby: {
+      url: `https://rinkeby.infura.io/v3/3a27cfc267bf426495054c63585809f9`,
+      accounts: {mnemonic: mnemonic()},
+    },
     // kovan: {
     //   url: `https://rinkeby.infura.io/v3/${process.env.KOVAN_INFURA_KEY}`,
     //   accounts: [`${process.env.KOVAN_DEPLOYER_PRIV_KEY}`],

@@ -28,13 +28,12 @@ export default function Events({ contracts, contractName, eventName, localProvid
       <h2>
         {eventName} Events
         <br />
-        {eventName === "EthToTokenSwap"
-          ? " ⟠ -->🎈 Address | Trade | AmountIn | AmountOut"
-          : eventName === "TokenToEthSwap"
-          ? "🎈-->⟠ Address | Trade | AmountOut | AmountIn"
-          : eventName === "LiquidityProvided"
-          ? "➕ Address | Liquidity Minted | Eth In | Balloons In"
-          : "➖ Address | Liquidity Withdrawn | ETH out | Balloons Out "}
+        {eventName === "EthToTokenSwap" ? " ⟠ -->🎈 Address | Trade | AmountIn | AmountOut"
+          : eventName === "TokenToEthSwap" ? "🎈-->⟠ Address | Trade | AmountOut | AmountIn"
+          : eventName === "LiquidityProvided" ? "➕ Address | Liquidity Minted | Eth In | Balloons In"
+          : eventName === "LiquidityRemoved" ? "➖ Address | Liquidity Withdrawn | ETH out | Balloons Out "
+          : "✓ Approval | Owner | Spender | Amount"
+        }
       </h2>
       <List
         bordered
@@ -43,13 +42,23 @@ export default function Events({ contracts, contractName, eventName, localProvid
           return (
             <List.Item key={item.blockNumber + "_" + item.args[0].toString()}>
               <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
-              {item.args[1].toString().indexOf("E") == -1 ? (
-                <TokenBalance balance={item.args[1]} provider={localProvider} />
-              ) : (
-                `${item.args[1].toString()}`
-              )}
+              {
+                item.args[1].toString().indexOf("E") == -1 ? (
+                  <TokenBalance balance={item.args[1]} provider={localProvider} />
+                ) : (
+                  item.args[1].toString().indexOf("0x") == 0 ? (
+                    <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />
+                  ) : (
+                    `${item.args[1].toString()}`
+                  )
+                )
+              }
               <TokenBalance balance={item.args[2]} provider={localProvider} />
-              <TokenBalance balance={item.args[3]} provider={localProvider} />
+              {
+                item.args[1].toString().indexOf("0x") == 0 ? "" : (
+                  <TokenBalance balance={item.args[3]} provider={localProvider} />
+                )
+              }
             </List.Item>
           );
         }}

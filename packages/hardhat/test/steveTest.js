@@ -138,7 +138,7 @@ describe("🚩 Challenge 3: ⚖️ 🪙 Simple DEX", function () {
             .connect(deployer.signer)
             .tokenToEth(ethers.utils.parseEther("1"));
           let tx1 = await dexContract
-            .connect(deployer.sign
+            .connect(deployer.signer)
             .tokenToEth(ethers.utils.parseEther("1"));
 
           //TODO: SYNTAX - write an expect that takes into account the emitted event from tokenToETH.

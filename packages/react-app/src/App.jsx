@@ -1,4 +1,4 @@
-import { Button, Col, Menu, Row, List } from "antd";
+import { Button, Col, Menu, Row } from "antd";
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -25,16 +25,14 @@ import {
   NetworkSwitch,
   TokenBalance,
   Dex,
-  Address,
-  Balance,
   Events,
+  Liquidity,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, ExampleUI, Hints, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 import { useEventListener } from "eth-hooks/events/useEventListener";
 
@@ -59,7 +57,7 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const initialNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const initialNetwork = NETWORKS.rinkeby; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -174,7 +172,7 @@ function App(props) {
   ]);
 
   // keep track of a variable from the contract in the local React state:
-  const purpose = useContractReader(readContracts, "Balloons", "purpose");
+  // const purpose = useContractReader(readContracts, "Balloons", "purpose");
 
   /*
   const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
@@ -281,25 +279,16 @@ function App(props) {
       />
       <Menu style={{ textAlign: "center", marginTop: 40 }} selectedKeys={[location.pathname]} mode="horizontal">
         <Menu.Item key="/">
-          <Link to="/">Home</Link>
+          <Link to="/">Swap</Link>
+        </Menu.Item>
+        <Menu.Item key="/Liquidity">
+          <Link to="/Liquidity">Liquidity</Link>
         </Menu.Item>
         <Menu.Item key="/Events">
           <Link to="/Events">Eventlist 📜</Link>
         </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
-        </Menu.Item>
-        <Menu.Item key="/hints">
-          <Link to="/hints">Hints</Link>
-        </Menu.Item>
-        <Menu.Item key="/exampleui">
-          <Link to="/exampleui">ExampleUI</Link>
-        </Menu.Item>
-        <Menu.Item key="/mainnetdai">
-          <Link to="/mainnetdai">Mainnet DAI</Link>
-        </Menu.Item>
-        <Menu.Item key="/subgraph">
-          <Link to="/subgraph">Subgraph</Link>
         </Menu.Item>
       </Menu>
 
@@ -339,6 +328,24 @@ function App(props) {
             />
           </div> */}
         </Route>
+        <Route exact path="/Liquidity">
+          {readContracts && readContracts.DEX && address && localProvider ? (
+            <Liquidity
+              tx={tx}
+              writeContracts={writeContracts}
+              localProvider={localProvider}
+              mainnetProvider={mainnetProvider}
+              blockExplorer={blockExplorer}
+              address={address} //this is causing issues
+              readContracts={readContracts} //this is causing issues
+              contractConfig={contractConfig}
+              signer={userSigner}
+              price={price}
+            />
+          ) : (
+            ""
+          )}
+        </Route>
         <Route path="/Events">
           <Events
             contracts={readContracts}
@@ -375,8 +382,16 @@ function App(props) {
             mainnetProvider={mainnetProvider}
             startBlock={1}
           />
+
+          <Events
+            contracts={readContracts}
+            contractName="Balloons"
+            eventName="Approval"
+            localProvider={localProvider}
+            mainnetProvider={mainnetProvider}
+            startBlock={1}
+          />
         </Route>
-        }
         <Route exact path="/debug">
           {/*
                 🎛 this scaffolding is full of commonly used components
@@ -402,58 +417,6 @@ function App(props) {
             address={address}
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}
-          />
-        </Route>
-        <Route path="/hints">
-          <Hints
-            address={address}
-            yourLocalBalance={yourLocalBalance}
-            mainnetProvider={mainnetProvider}
-            price={price}
-          />
-        </Route>
-        <Route path="/exampleui">
-          <ExampleUI
-            address={address}
-            userSigner={userSigner}
-            mainnetProvider={mainnetProvider}
-            localProvider={localProvider}
-            yourLocalBalance={yourLocalBalance}
-            price={price}
-            tx={tx}
-            writeContracts={writeContracts}
-            readContracts={readContracts}
-            purpose={purpose}
-          />
-        </Route>
-        <Route path="/mainnetdai">
-          <Contract
-            name="DAI"
-            customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.DAI}
-            signer={userSigner}
-            provider={mainnetProvider}
-            address={address}
-            blockExplorer="https://etherscan.io/"
-            contractConfig={contractConfig}
-            chainId={1}
-          />
-          {/*
-            <Contract
-              name="UNI"
-              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.UNI}
-              signer={userSigner}
-              provider={mainnetProvider}
-              address={address}
-              blockExplorer="https://etherscan.io/"
-            />
-            */}
-        </Route>
-        <Route path="/subgraph">
-          <Subgraph
-            subgraphUri={props.subgraphUri}
-            tx={tx}
-            writeContracts={writeContracts}
-            mainnetProvider={mainnetProvider}
           />
         </Route>
       </Switch>
